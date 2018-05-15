@@ -1,9 +1,10 @@
 var count = 1;
+var dateScale = ['18:30', '20:00'];    // 订票日期时间段选择， 18：30 到 20:00 之前
 var timer = setInterval(function() {
     
     // '深圳北： IOQ'  普宁: PEQ
     const HTTP = {
-        "leftTicketDTO.train_date": "2017-10-01",
+        "leftTicketDTO.train_date": "2018-06-12",
         "leftTicketDTO.from_station": $("#fromStation").val(),
         "leftTicketDTO.to_station": $("#toStation").val(),
         purpose_codes: "ADULT"
@@ -257,22 +258,39 @@ var timer = setInterval(function() {
                     // wz: 无座
                     // ze： 二等
                     // zy: 一等
-                    if((e.queryLeftNewDTO.canWebBuy == 'Y' && e.queryLeftNewDTO.to_station_name == '普宁' && e.queryLeftNewDTO.ze_num != '无' &&                     e.queryLeftNewDTO.ze_num != '1') 
+
+                    if((e.queryLeftNewDTO.canWebBuy == 'Y' && e.queryLeftNewDTO.to_station_name == '普宁' && e.queryLeftNewDTO.ze_num != '无' && e.queryLeftNewDTO.ze_num != '1') 
                     || (e.queryLeftNewDTO.canWebBuy == 'Y' && e.queryLeftNewDTO.to_station_name == '普宁' && e.queryLeftNewDTO.wz_num != '无' && e.queryLeftNewDTO.wz_num != '1')
                     || (e.queryLeftNewDTO.ccanWebBuy == 'Y' && e.queryLeftNewDTO.to_station_name == '普宁' && e.queryLeftNewDTO.wy_num != '无' && e.queryLeftNewDTO.wy_num != '1')
                     || (e.queryLeftNewDTO.ccanWebBuy == 'Y' && e.queryLeftNewDTO.to_station_name == '普宁' && e.queryLeftNewDTO.wy_num != '无' && e.queryLeftNewDTO.wy_num != '1')
-                ) { checkG1234(e.secretStr,
-                                e.queryLeftNewDTO.start_time,
-                                e.queryLeftNewDTO.train_no,
-                                e.queryLeftNewDTO.from_station_telecode,
-                                e.queryLeftNewDTO.to_station_telecode
-                            )
+                ) {
+                    // 不设置则全天都可预订
+                    if (!dateScale.length) {
+                        return reserve(e);
+                    }else {
+                        var startTime = new Date(new Date().toDateString() + ' ' + dateScale[0]),
+                            endTime = new Date(new Date().toDateString() + ' ' + dateScale[1]),
+                            transTime = new Date(new Date().toDateString() + ' ' + e.queryLeftNewDTO.start_time);
+                        
+                        if (startTime < transTime && endTime > transTime) {
+                            return reserve(e);
+                        }
+                    }
+
+                    function reserve(e) {
+                        checkG1234(
+                            e.secretStr,
+                            e.queryLeftNewDTO.start_time,
+                            e.queryLeftNewDTO.train_no,
+                            e.queryLeftNewDTO.from_station_telecode,
+                            e.queryLeftNewDTO.to_station_telecode)
                             clearInterval(timer);
                             var e = document.createEvent("MouseEvents");
                             e.initEvent("click", true, true);
                             document.getElementById("tryPlayer").dispatchEvent(e);
-                        return e.queryLeftNewDTO.canWebBuy == 'Y'
-                    };
+                            return e.queryLeftNewDTO.canWebBuy == 'Y'
+                        }
+                    }
                 })
               
                 if (!$("#yxtrain_loading").is(":hidden")) {
