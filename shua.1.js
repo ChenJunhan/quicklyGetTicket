@@ -4,7 +4,7 @@ var timer = setInterval(function() {
     
     // '深圳北： IOQ'  普宁: PEQ
     const HTTP = {
-        "leftTicketDTO.train_date": "2018-06-14",
+        "leftTicketDTO.train_date": $("#train_date").val(),
         "leftTicketDTO.from_station": $("#fromStation").val(),
         "leftTicketDTO.to_station": $("#toStation").val(),
         purpose_codes: "ADULT"
