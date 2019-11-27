@@ -1,14 +1,16 @@
 var count = 1;
-var dateScale = ['18:30', '20:00'];    // 订票日期时间段选择， 18：30 到 20:00 之前
+var dateScale = ['06:30', '20:00'];    // 订票日期时间段选择， 06：30 到 20:00 之前
 var timer = setInterval(function() {
     
     // '深圳北： IOQ'  普宁: PEQ
     const HTTP = {
-        "leftTicketDTO.train_date": "2018-06-12",
+        "leftTicketDTO.train_date": $("#train_date").val(),
         "leftTicketDTO.from_station": $("#fromStation").val(),
         "leftTicketDTO.to_station": $("#toStation").val(),
         purpose_codes: "ADULT"
     }
+    const toStationText = $('#toStationText').val();
+
       function cn() {
           for (var cq = 0; cq < limit_tickets.length; cq++) {
               var cp = limit_tickets[cq];
@@ -260,10 +262,10 @@ var timer = setInterval(function() {
                     // ze： 二等
                     // zy: 一等
 
-                    if((e.queryLeftNewDTO.canWebBuy == 'Y' && e.queryLeftNewDTO.to_station_name == '普宁' && e.queryLeftNewDTO.ze_num != '无' && e.queryLeftNewDTO.ze_num != '1') 
-                    || (e.queryLeftNewDTO.canWebBuy == 'Y' && e.queryLeftNewDTO.to_station_name == '普宁' && e.queryLeftNewDTO.wz_num != '无' && e.queryLeftNewDTO.wz_num != '1')
-                    || (e.queryLeftNewDTO.ccanWebBuy == 'Y' && e.queryLeftNewDTO.to_station_name == '普宁' && e.queryLeftNewDTO.wy_num != '无' && e.queryLeftNewDTO.wy_num != '1')
-                    || (e.queryLeftNewDTO.ccanWebBuy == 'Y' && e.queryLeftNewDTO.to_station_name == '普宁' && e.queryLeftNewDTO.wy_num != '无' && e.queryLeftNewDTO.wy_num != '1')
+                    if((e.queryLeftNewDTO.canWebBuy == 'Y' && e.queryLeftNewDTO.to_station_name == toStationText && e.queryLeftNewDTO.ze_num != '无' && e.queryLeftNewDTO.ze_num != '1') 
+                    || (e.queryLeftNewDTO.canWebBuy == 'Y' && e.queryLeftNewDTO.to_station_name == toStationText && e.queryLeftNewDTO.wz_num != '无' && e.queryLeftNewDTO.wz_num != '1')
+                    || (e.queryLeftNewDTO.ccanWebBuy == 'Y' && e.queryLeftNewDTO.to_station_name == toStationText && e.queryLeftNewDTO.wy_num != '无' && e.queryLeftNewDTO.wy_num != '1')
+                    || (e.queryLeftNewDTO.ccanWebBuy == 'Y' && e.queryLeftNewDTO.to_station_name == toStationText && e.queryLeftNewDTO.wy_num != '无' && e.queryLeftNewDTO.wy_num != '1')
                 ) {
                     // 不设置则全天都可预订
                     if (!dateScale.length) {
@@ -319,4 +321,3 @@ var timer = setInterval(function() {
         }
     });
     }, 3000)
-   
